@@ -9,11 +9,18 @@ export type Member = {
   description?: string;
   city: string;
   country: string;
-}
+};
 
 export type Photo = {
   id: number;
   url: string;
   publicId?: string;
   memberId: string;
-}
+};
+
+export type EditableMember = {
+  displayName: string;
+  description?: string;
+  city: string;
+  country: string;
+};
