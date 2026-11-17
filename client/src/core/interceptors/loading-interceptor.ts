@@ -9,7 +9,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const busyService = inject(BusyService);
 
   if(req.method === 'GET'){
-    const cachedResponse = cache.get('req.url');
+    const cachedResponse = cache.get(req.url);
     if(cachedResponse){
       return of(cachedResponse);
     }
@@ -19,9 +19,13 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     delay(500),
-    tap(response => {
-      cache.set(req.url,response)
-    }),
+   tap(response => {
+  if (req.method === 'GET') {
+    cache.set(req.url, response);
+  } else {
+    cache.clear();
+  }
+}),
     finalize(() => {
       busyService.idle();
     }),
